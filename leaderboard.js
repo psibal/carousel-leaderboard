@@ -4,16 +4,27 @@
 Players = new Mongo.Collection("players");
 
 if (Meteor.isClient) {
+  var options = { sort: { score: -1, name: 1 } };
+  var playersSub = Meteor.subscribe('players', options);
+
   Template.leaderboard.rendered = function() {
-    var owl = this.$(".owl-carousel");
-    owl.owlCarousel({
-      items: 2
+    var _this = this;
+    // XXX : what is autorun?!
+    this.autorun(function(c) {
+      if (playersSub.ready() > 0) {
+        var owl = _this.$(".owl-carousel");
+        owl.owlCarousel({
+          items: 2
+        });
+        c.stop();
+      }
     });
   };
 
   Template.leaderboard.helpers({
+    // XXX : if I use subscribe I assume I don't need this. but how can I remove this gracefully.
     players: function () {
-      return Players.find({}, { sort: { score: -1, name: 1 } });
+      return Players.find({}, options);
     },
     selectedName: function () {
       var player = Players.findOne(Session.get("selectedPlayer"));
@@ -53,5 +64,8 @@ if (Meteor.isServer) {
         });
       });
     }
+  });
+  Meteor.publish('players', function(options) {
+    return Players.find({}, options);
   });
 }
