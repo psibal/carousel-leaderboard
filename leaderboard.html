@@ -14,11 +14,11 @@
 </body>
 
 <template name="leaderboard">
-  <ol class="leaderboard">
+  <div class="leaderboard owl-carousel">
     {{#each players}}
       {{> player}}
     {{/each}}
-  </ol>
+  </div>
 
   {{#if selectedName}}
     <div class="details">
@@ -31,9 +31,9 @@
 </template>
 
 <template name="player">
-  <li class="player {{selected}}">
+  <div class="player {{selected}}">
     <span class="name">{{name}}</span>
     <span class="score">{{score}}</span>
-  </li>
+  </div>
 </template>
 

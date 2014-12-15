@@ -4,6 +4,13 @@
 Players = new Mongo.Collection("players");
 
 if (Meteor.isClient) {
+  Template.leaderboard.rendered = function() {
+    var owl = this.$(".owl-carousel");
+    owl.owlCarousel({
+      items: 2
+    });
+  };
+
   Template.leaderboard.helpers({
     players: function () {
       return Players.find({}, { sort: { score: -1, name: 1 } });
